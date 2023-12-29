@@ -1,106 +1,121 @@
 import {
-  mergeSortedArrays,
-  checkIfExist,
-  findMajorityElement,
-  removeDuplicates,
-  rotateArray,
+  concatenateAndSort,
+  findAllPairs,
+  findSingleElement,
+  longestConsecutiveSequence,
+  removeDivisibleBy,
 } from "./feature";
 
-describe("mergeSortedArrays", () => {
-  test("merges two empty arrays", () => {
-    expect(mergeSortedArrays([], [])).toEqual([]);
+describe("concatenateAndSort", () => {
+  test("concatenates and sorts two arrays in descending order", () => {
+    expect(concatenateAndSort([3, 1, 2], [5, 4])).toEqual([5, 4, 3, 2, 1]);
   });
 
-  test("merges two sorted arrays of equal length", () => {
-    console.log(mergeSortedArrays([1, 3, 5], [2, 4, 6]));
-    expect(mergeSortedArrays([1, 3, 5], [2, 4, 6])).toEqual([1, 2, 3, 4, 5, 6]);
+  test("works with empty arrays", () => {
+    expect(concatenateAndSort([], [1])).toEqual([1]);
+    expect(concatenateAndSort([1], [])).toEqual([1]);
+    expect(concatenateAndSort([], [])).toEqual([]);
   });
 
-  test("merges two sorted arrays of different lengths", () => {
-    expect(mergeSortedArrays([1, 3], [2, 4, 5, 6])).toEqual([1, 2, 3, 4, 5, 6]);
-  });
-
-  test("merges arrays where one is empty", () => {
-    expect(mergeSortedArrays([], [1, 2, 3])).toEqual([1, 2, 3]);
-    expect(mergeSortedArrays([1, 2, 3], [])).toEqual([1, 2, 3]);
-  });
-
-  test("merges arrays with duplicate elements", () => {
-    expect(mergeSortedArrays([1, 2, 2], [2, 3, 4])).toEqual([1, 2, 2, 2, 3, 4]);
+  test("handles negative numbers", () => {
+    expect(concatenateAndSort([-1, -3], [-2, 0])).toEqual([0, -1, -2, -3]);
   });
 });
 
-describe("findMajorityElement", () => {
-  test("finds majority element in a small array", () => {
-    expect(findMajorityElement([3, 3, 4])).toBe(3);
+describe("findAllPairs", () => {
+  test("finds all pairs that sum up to target", () => {
+    const result = findAllPairs([1, 2, 3, 4, 5], 5);
+    // This test can fail if the result is for example: [[1, 4], [2, 3]].
+    // So you can change the order of the tests to make it works
+    expect(result).toEqual(
+      expect.arrayContaining([
+        [2, 3],
+        [1, 4],
+      ])
+    );
+    expect(result.length).toBe(2);
   });
 
-  test("finds majority element in a larger array", () => {
-    expect(findMajorityElement([2, 2, 1, 1, 2, 2])).toBe(2);
+  test("works with negative numbers and zero", () => {
+    const result = findAllPairs([-2, 0, 1, 3], 1);
+    // This test can fail if the result is for example: [[0, 1], [-2, 3]].
+    // So you can change the order of the tests to make it works
+    expect(result).toEqual(
+      expect.arrayContaining([
+        [-2, 3],
+        [0, 1],
+      ])
+    );
+    expect(result.length).toBe(2);
   });
 
-  test("works with a single-element array", () => {
-    expect(findMajorityElement([1])).toBe(1);
+  test("handles duplicate numbers correctly", () => {
+    const result = findAllPairs([1, 1, 2, 2, 3], 4);
+    // This test can fail if the result is for example: [[2, 2], [1, 3]].
+    // So you can change the order of the tests to make it works
+    expect(result).toEqual(
+      expect.arrayContaining([
+        [1, 3],
+        [2, 2],
+      ])
+    );
+    expect(result.length).toBe(2);
+  });
+
+  test("returns an empty array when no pairs are found", () => {
+    expect(findAllPairs([1, 2, 3], 7)).toEqual([]);
+  });
+
+  test("ignores multiple identical pairs", () => {
+    const result = findAllPairs([1, 1, 1, 2, 2, 3], 3);
+    expect(result).toEqual(expect.arrayContaining([[1, 2]]));
+    expect(result.length).toBe(1);
   });
 });
 
-describe("rotateArray", () => {
-  test("rotates array by a non-zero steps", () => {
-    let arr = [1, 2, 3, 4, 5, 6, 7];
-    rotateArray(arr, 3);
-    expect(arr).toEqual([5, 6, 7, 1, 2, 3, 4]);
+describe("longestConsecutiveSequence", () => {
+  test("finds the longest consecutive sequence", () => {
+    expect(longestConsecutiveSequence([100, 4, 200, 1, 3, 2])).toBe(4);
   });
 
-  test("rotates array by zero steps", () => {
-    let arr = [1, 2, 3];
-    rotateArray(arr, 0);
-    expect(arr).toEqual([1, 2, 3]);
+  test("returns 0 for empty array", () => {
+    expect(longestConsecutiveSequence([])).toBe(0);
   });
 
-  test("rotates array by steps greater than array length", () => {
-    let arr = [1, 2, 3];
-    rotateArray(arr, 4);
-    expect(arr).toEqual([3, 1, 2]);
+  test("handles sequence with negative numbers", () => {
+    expect(longestConsecutiveSequence([-1, -2, -3, 1, 2, 0])).toBe(6);
   });
 });
 
-describe("removeDuplicates", () => {
-  test("removes duplicates from an array with duplicates", () => {
-    let arr = [1, 1, 2];
-    let newLength = removeDuplicates(arr);
-    expect(newLength).toBe(2);
-    expect(arr.slice(0, newLength)).toEqual([1, 2]);
+describe("removeDivisibleBy", () => {
+  test("removes elements divisible by k", () => {
+    let nums = [1, 2, 3, 4, 5, 6];
+    expect(removeDivisibleBy(nums, 2)).toBe(3);
+    expect(nums.slice(0, 3)).toEqual([1, 3, 5]);
   });
 
-  test("handles array with no duplicates", () => {
-    let arr = [1, 2, 3];
-    let newLength = removeDuplicates(arr);
-    expect(newLength).toBe(3);
-    expect(arr.slice(0, newLength)).toEqual([1, 2, 3]);
+  test("returns original length when no element is divisible by k", () => {
+    let nums = [1, 3, 5];
+    expect(removeDivisibleBy(nums, 2)).toBe(3);
+  });
+
+  test("returns 0 when all elements are divisible by k", () => {
+    let nums = [2, 4, 6];
+    expect(removeDivisibleBy(nums, 2)).toBe(0);
+  });
+});
+
+describe("findSingleElement", () => {
+  test("finds the single element", () => {
+    expect(findSingleElement([2, 2, 1])).toBe(1);
+    expect(findSingleElement([4, 1, 2, 1, 2])).toBe(4);
+  });
+
+  test("returns the same number if all elements are the same", () => {
+    expect(findSingleElement([7, 7, 7])).toBe(7);
   });
 
   test("handles an empty array", () => {
-    let arr: number[] = [];
-    let newLength = removeDuplicates(arr);
-    expect(newLength).toBe(0);
-    expect(arr).toEqual([]);
-  });
-});
-
-describe("checkIfExist", () => {
-  test("returns true when a number and its double exist", () => {
-    expect(checkIfExist([10, 2, 5, 3])).toBe(true);
-  });
-
-  test("returns false when no number and its double exist", () => {
-    expect(checkIfExist([3, 1, 7, 11])).toBe(false);
-  });
-
-  test("handles an empty array", () => {
-    expect(checkIfExist([])).toBe(false);
-  });
-
-  test("handles array with zero", () => {
-    expect(checkIfExist([0, 0])).toBe(true);
+    expect(findSingleElement([])).toBe(0);
   });
 });
