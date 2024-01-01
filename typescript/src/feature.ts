@@ -51,7 +51,10 @@ export function longestConsecutiveSequence(nums: number[]): number {
   and return the new length of the array.
 */
 export function removeDivisibleBy(nums: number[], k: number): number {
-    return nums.filter((num) => num % k !== 0).length;
+    const divisibleByArr = nums.filter((num) => num % k !== 0);
+    nums.length = 0;
+    nums.push(...divisibleByArr);
+    return nums.length;
 }
 
 /*
